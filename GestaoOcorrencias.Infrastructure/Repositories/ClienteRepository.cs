@@ -1,6 +1,8 @@
-﻿using GestaoOcorrencias.Api.Configuration;
+﻿using GestaoOcorrencias.Api;
+using GestaoOcorrencias.Api.Configuration;
 using GestaoOcorrencias.Domain.Entities;
 using GestaoOcorrencias.Infrastructure.Contexts;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,57 +13,54 @@ namespace GestaoOcorrencias.Infrastructure.Repositories
 {
     public class ClienteRepository : IClienteRepository
     {
-        private readonly IContext _context;
-        private readonly IAppConfig _appConfig;
-        public ClienteRepository()
+        private readonly DataContext _context;
+        private readonly IConfiguration _configuration;
+        public ClienteRepository(IConfiguration configuration, DataContext context)
         {
-            //_context = new EntityContext();
-            _context = new Context();
+            _configuration = configuration;
+            _context = context;
         }
         public void Atualizar(Cliente cliente, double Id)
         {
-            _context.UpdateCliente(cliente, Id);
+            Cliente clienteUpdate = _context.Clientes.FirstOrDefault(p => p.ClienteId == Id);
+            _context.Clientes.Remove(clienteUpdate);
+            cliente.Id = clienteUpdate.Id;
+            _context.Clientes.Add(cliente);
+            _context.SaveChanges();
         }
 
         public void Excluir(double clienteId)
         {
-            _context.DeleteCliente(clienteId);
+            Cliente cliente = _context.Clientes.FirstOrDefault(p => p.ClienteId == clienteId);
+            if (cliente != null)
+            {
+                _context.Clientes.Remove(cliente);
+                _context.SaveChanges();
+            }
         }
 
         public List<Cliente> Listar()
         {
-            return _context.GetClientes();
+            return _context.Clientes
+                 .OrderBy(p => p.ClienteId)
+                 .ToList();
         }
 
         public Cliente Pesquisar(double clienteId)
         {
-            return _context.ReadCliente(clienteId);
+            return _context.Clientes.FirstOrDefault(p => p.ClienteId == clienteId);
         }
 
         public void Salvar(Cliente cliente)
         {
-            _context.CreateCliente(cliente);
+            _context.Clientes.Add(cliente);
+            _context.SaveChanges();
         }
 
         public void Cadastrar(Cliente cliente)
         {
-            //Cliente novo = new Cliente()
-            //{
-            //    Id = Guid.NewGuid(),
-            //    ClienteId = 1,
-            //    Email = "teste@teste.com.br",
-            //    Endereco = new Endereco()
-            //    {
-            //        Bairro = "Av do contorno",
-            //        CEP = 123,
-            //        Id = Guid.NewGuid(),
-            //        Logradouro = "centro",
-            //        UF = "MG"
-            //    },
-            //    Name = nome,
-            //    Telefone = "31912341234"
-            //};
-        _context.CreateCliente(cliente);
+            _context.Clientes.Add(cliente);
+            _context.SaveChanges();
         }
     }
 }

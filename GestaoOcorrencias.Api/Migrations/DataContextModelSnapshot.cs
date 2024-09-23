@@ -80,7 +80,7 @@ namespace GestaoOcorrencias.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Endereco");
+                    b.ToTable("Enderecos");
                 });
 
             modelBuilder.Entity("GestaoOcorrencias.Domain.Entities.Ocorrencia", b =>

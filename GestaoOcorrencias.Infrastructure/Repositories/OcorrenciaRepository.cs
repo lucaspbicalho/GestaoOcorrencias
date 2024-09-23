@@ -1,5 +1,7 @@
-﻿using GestaoOcorrencias.Domain.Entities;
+﻿using GestaoOcorrencias.Api;
+using GestaoOcorrencias.Domain.Entities;
 using GestaoOcorrencias.Infrastructure.Contexts;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,39 +12,48 @@ namespace GestaoOcorrencias.Infrastructure.Repositories
 {
     public class OcorrenciaRepository : IOcorrenciaRepository
     {
-        private readonly IContext _context;
-        public OcorrenciaRepository()
+        private readonly DataContext _context;
+        private readonly IConfiguration _configuration;
+        public OcorrenciaRepository(IConfiguration configuration, DataContext context)
         {
-            _context = new Context();
+            _configuration = configuration;
+            _context = context;
         }
         public void Atualizar(Ocorrencia ocorrencia, Guid Id)
         {
-            _context.UpdateOcorrencia(ocorrencia, Id);
+            Ocorrencia ocorrenciaUpdate = _context.Ocorrencias.FirstOrDefault(p => p.Id == Id);
+            _context.Ocorrencias.Remove(ocorrenciaUpdate);
+            ocorrencia.Id = ocorrenciaUpdate.Id;
+            _context.Ocorrencias.Add(ocorrencia);
+            _context.SaveChanges();
         }
 
         public void Excluir(Guid Id)
         {
-            _context.DeleteOcorrencia(Id);
+            Ocorrencia ocorrencia = _context.Ocorrencias.FirstOrDefault(p => p.Id == Id);
+            if (ocorrencia != null)
+            {
+                _context.Ocorrencias.Remove(ocorrencia);
+                _context.SaveChanges();
+            }
         }
 
         public List<Ocorrencia> Listar()
         {
-            return _context.GetOcorrencias();
+            return _context.Ocorrencias
+                 .OrderBy(p => p.DataAbertura)
+                 .ToList();
         }
 
         public Ocorrencia Pesquisar(Guid Id)
         {
-            return _context.ReadOcorrencia(Id);
+            return _context.Ocorrencias.FirstOrDefault(p => p.Id == Id);
         }
-
-        //public void Salvar(Cliente cliente)
-        //{
-        //    _context.CreateCliente(cliente);
-        //}
 
         public void Abertura(Ocorrencia ocorrencia)
         {
-            _context.Abertura(ocorrencia);
+            _context.Ocorrencias.Add(ocorrencia);
+            _context.SaveChanges();
         }
     }
 }

@@ -5,31 +5,23 @@ using GestaoOcorrencias.Services.Service;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
-
-
-
-
 // Add services to the container.
 
 builder.Services.AddControllers();
 
 // Repository
-builder.Services.AddSingleton<IClienteRepository, ClienteRepository>();
-builder.Services.AddSingleton<IOcorrenciaRepository, OcorrenciaRepository>();
+builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+builder.Services.AddScoped<IOcorrenciaRepository, OcorrenciaRepository>();
 // Services
 builder.Services.AddScoped<ClienteService>();
 builder.Services.AddScoped<OcorrenciaService>();
 
-builder.Services.AddDbContext<GestaoOcorrencias.Infrastructure.Contexts.EntityContext>();
 
-
+var provider = builder.Services.BuildServiceProvider();
+var config = provider.GetRequiredService<IConfiguration>();
+builder.Services.AddDbContext<DataContext>(item => item.UseSqlServer(config.GetConnectionString("dbcs")));
 
 var app = builder.Build();
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<GestaoOcorrencias.Infrastructure.Contexts.EntityContext>();
-}
 // Configure the HTTP request pipeline.
 
 app.UseAuthorization();

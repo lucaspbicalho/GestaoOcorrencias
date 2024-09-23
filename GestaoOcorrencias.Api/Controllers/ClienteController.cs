@@ -1,6 +1,7 @@
 ﻿using GestaoOcorrencias.Api.Configuration;
 using GestaoOcorrencias.Domain.Dtos;
 using GestaoOcorrencias.Domain.Entities;
+using GestaoOcorrencias.Infrastructure.Repositories;
 using GestaoOcorrencias.Services.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +14,11 @@ namespace GestaoOcorrencias.Api.Controllers
     public class ClienteController : ControllerBase
     {
         private readonly ClienteService _clienteService;
-        private readonly ApiSettings _apiConfig;
-        public ClienteController(ClienteService clienteService,
-                                 IOptions<ApiSettings> options)
+        private readonly IClienteRepository _clienteRepository;
+        public ClienteController(ClienteService clienteService, IClienteRepository clienteRepository)
         {
             _clienteService = clienteService;
-            _apiConfig = options.Value;
+            _clienteRepository = clienteRepository;
         }
         
         //CREATE
