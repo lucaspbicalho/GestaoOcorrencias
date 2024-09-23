@@ -1,0 +1,49 @@
+﻿@model GestaoOcorrencias.Web.Models.Dtos.OcorrenciaDto
+
+@{
+    ViewData["Title"] = "Update";
+}
+
+<h1>Update</h1>
+
+<h4>OcorrenciaDto</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Update">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Descricao" class="control-label"></label>
+                <input asp-for="Descricao" class="form-control" />
+                <span asp-validation-for="Descricao" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DataAbertura" class="control-label"></label>
+                <input asp-for="DataAbertura" class="form-control" />
+                <span asp-validation-for="DataAbertura" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DataOcorrencia" class="control-label"></label>
+                <input asp-for="DataOcorrencia" class="form-control" />
+                <span asp-validation-for="DataOcorrencia" class="text-danger"></span>
+            </div>           
+            <div class="form-group">
+                <label asp-for="Conclusao" class="control-label"></label>
+                <input asp-for="Conclusao" class="form-control" />
+                <span asp-validation-for="Conclusao" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input name="Update" value="true" type="hidden" />
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-controller="Ocorrencia" asp-action="Ocorrencias">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

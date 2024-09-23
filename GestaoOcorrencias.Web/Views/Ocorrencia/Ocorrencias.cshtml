@@ -1,0 +1,84 @@
+﻿@model IEnumerable<GestaoOcorrencias.Web.Models.Dtos.OcorrenciaDto>
+
+@{
+    ViewData["Title"] = "Ocorrencias";
+}
+
+<h1>Ocorrências</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Adicionar</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataAbertura)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataOcorrencia)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Conclusao)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Descricao)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DataAbertura)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DataOcorrencia)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Conclusao)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descricao)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>                   
+                    @if (item.Status == OcorrenciaStatus.Aberto)
+                    {
+                        @Html.ActionLink("Avançar", "Avancar", new {  id=item.Id  })
+ 
+
+                    }
+                    @if(item.Status == OcorrenciaStatus.Fechada)
+                    {                    
+ 
+
+                    }
+                    @if(item.Status == OcorrenciaStatus.EmProgresso)
+                    {
+                        @Html.ActionLink("Fechar", "Fechar", new {  id=item.Id  })
+                         
+
+                    }
+                     |
+                    @Html.ActionLink("Editar", "Update", new {  id=item.Id  }) |
+                    @Html.ActionLink("Ver", "Read", new { id=item.Id  }) |
+                    @Html.ActionLink("Deletar", "Delete", new { id=item.Id  })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

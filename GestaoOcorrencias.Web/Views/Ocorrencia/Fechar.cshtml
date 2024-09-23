@@ -1,0 +1,61 @@
+﻿@model GestaoOcorrencias.Web.Models.Dtos.OcorrenciaDto
+
+@{
+    ViewData["Title"] = "Update";
+}
+
+<h1>Fechar</h1>
+
+<h4>OcorrenciaDto</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Fechar">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Conclusao" class="control-label"></label>
+                <input asp-for="Conclusao" class="form-control" />
+                <span asp-validation-for="Conclusao" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input name="Update" value="true" type="hidden" />
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-controller="Ocorrencia" asp-action="Ocorrencias">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        var valueResponsavelArray = [];
+        function AppViewModel() {
+            this.Descricao = "Bert";
+            self.DepartmentList = ko.observableArray([{ Id: '0', Name: "" }]);
+                    
+
+        }
+        // Activates knockout.js
+        ko.applyBindings(new AppViewModel());
+
+        $(document).ready(function() {
+            $.ajax({
+                url: '/Ocorrencia/GetResponsavel',
+                type: 'get',
+                contentType: 'application/json',
+                success: function(data) {
+                    console.log(data)
+                    $.each(data, function(index, theValue) {
+                        self.DepartmentList.push({Id:data[index].clienteId, Name:data[index].name});
+                    });
+                }
+            });
+        });
+    </script>
+    }

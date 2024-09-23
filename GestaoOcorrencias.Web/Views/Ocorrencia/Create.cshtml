@@ -1,0 +1,70 @@
+﻿@model GestaoOcorrencias.Web.Models.Dtos.OcorrenciaDto
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Descricao" class="control-label"></label>
+                <input asp-for="Descricao" class="form-control" />
+                <span asp-validation-for="Descricao" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DataAbertura" class="control-label"></label>
+                <input asp-for="DataAbertura" class="form-control" />
+                <span asp-validation-for="DataAbertura" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="ResponsavelAbertura">Responsável Abertura</label>
+                <select id="ddlDepartment" class="form-control" name="ddlDepartment" data-bind="options: DepartmentList, optionsValue:'Id', optionsText:'Name'"></select>  
+  
+
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Ocorrencias" asp-controller="Ocorrencia">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        var valueResponsavelArray = [];
+        function AppViewModel() {
+            this.Descricao = "Bert";
+            self.DepartmentList = ko.observableArray([{ Id: '0', Name: "" }]);
+                    
+
+        }
+        // Activates knockout.js
+        ko.applyBindings(new AppViewModel());
+
+        $(document).ready(function() {
+            $.ajax({
+                url: '/Ocorrencia/GetResponsavel',
+                type: 'get',
+                contentType: 'application/json',
+                success: function(data) {
+                    console.log(data)
+                    $.each(data, function(index, theValue) {
+                        self.DepartmentList.push({Id:data[index].clienteId, Name:data[index].name});
+                    });
+                }
+            });
+        });
+    </script>
+    }
+
